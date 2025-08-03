@@ -1,45 +1,60 @@
 import { useState } from "react";
-import { Heart, Star, BookOpen, Bookmark } from "lucide-react";
+import { Heart, Star, BookOpen } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
-import { useAuth } from "../hooks/use-auth";
+import { UserAuth } from "../services/AuthContext";
 import { useFavorites } from "../hooks/use-favorites";
 import { Link } from "react-router-dom";
 
 export default function BookCard({ book, viewMode = "grid" }) {
-    const { user } = useAuth();
+    const { session } = UserAuth();
     const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
     const [isLoading, setIsLoading] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+
+    const user = session?.user;
 
     const isFavorite = favorites.some(
         (fav) => fav.book_id === book.id || fav.id === book.id
     );
 
-    const title = book.volumeInfo.title || "Unknown Title";
-    const authors = book.volumeInfo.authors?.join(", ") || "Unknown Author";
+    const title = book.volumeInfo?.title || book.volume_info?.title || "Unknown Title";
+    const authors = book.volumeInfo?.authors?.join(", ") || book.volume_info?.authors?.join(", ") || "Unknown Author";
     const image =
-        book.volumeInfo.imageLinks?.thumbnail || "/placeholder.svg?height=300&width=200";
-    const rating = book.volumeInfo.averageRating || 0;
-    const category = book.volumeInfo.categories?.[0] || "";
-    const year = book.volumeInfo.publishedDate?.split("-")[0] || "Unknown Year";
+        book.volumeInfo?.imageLinks?.thumbnail || book.volume_info?.imageLinks?.thumbnail || "/placeholder.svg?height=300&width=200";
+    const rating = book.volumeInfo?.averageRating || book.volume_info?.averageRating || 0;
+    const category = book.volumeInfo?.categories?.[0] || book.volume_info?.categories?.[0] || "";
+    const year = book.volumeInfo?.publishedDate?.split("-")[0] || book.volume_info?.publishedDate?.split("-")[0] || "Unknown Year";
 
     const handleFavoriteToggle = async (e) => {
         e.preventDefault();
         e.stopPropagation();
 
-        if (!user) return;
+        console.log("Favorite toggle clicked for book:", book.id);
+        console.log("Current user:", user);
+        console.log("Is favorite:", isFavorite);
+
+        if (!user) {
+            // You could add a toast notification here to prompt user to sign in
+            console.log("User must be signed in to add favorites");
+            return;
+        }
 
         setIsLoading(true);
         try {
             if (isFavorite) {
+                console.log("Removing from favorites...");
                 await removeFromFavorites(book.id);
+                console.log("Removed from favorites");
             } else {
+                console.log("Adding to favorites...");
                 await addToFavorites(book);
+                console.log("Added to favorites");
             }
         } catch (error) {
             console.error("Failed to toggle favorite:", error);
+            // You could add a toast notification here to show error
         } finally {
             setIsLoading(false);
         }
@@ -129,27 +144,13 @@ export default function BookCard({ book, viewMode = "grid" }) {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent" />
 
-                    <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+                    <div className="absolute top-3 left-3">
                         {category && (
                             <Badge className="bg-white text-gray-900 text-xs font-medium shadow-sm">
                                 {category}
                             </Badge>
                         )}
-
-                        {user && (
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                className={`h-8 w-8 rounded-full shadow-sm ${isFavorite ? "bg-red-500 text-white hover:bg-red-600" : "bg-white/90 text-gray-600 hover:bg-white"}`}
-                                onClick={handleFavoriteToggle}
-                                disabled={isLoading}
-                            >
-                                <Heart className={`h-4 w-4 ${isFavorite ? "fill-current" : ""}`} />
-                            </Button>
-                        )}
                     </div>
-
-
                 </div>
 
                 <CardContent className="p-4 space-y-2">
@@ -169,10 +170,17 @@ export default function BookCard({ book, viewMode = "grid" }) {
                             <span className="text-xs text-gray-500">{year}</span>
                         </div>
 
-                        <div className="flex items-center gap-1 text-xs text-gray-500">
-                            <Bookmark className="h-3 w-3" />
-                            <span>Save</span>
-                        </div>
+                        {user && (
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className={`h-6 w-6 rounded-full ${isFavorite ? "text-red-500" : "text-gray-400"} hover:bg-gray-100`}
+                                onClick={handleFavoriteToggle}
+                                disabled={isLoading}
+                            >
+                                <Heart className={`h-3 w-3 ${isFavorite ? "fill-current" : ""}`} />
+                            </Button>
+                        )}
                     </div>
                 </CardContent>
             </Link>
