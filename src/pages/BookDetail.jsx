@@ -11,6 +11,19 @@ import { useFavorites } from "../hooks/use-favorites";
 import { fetchBookById, getBookCoverUrl } from "../services/booksApi";
 import { Link } from "react-router-dom";
 
+function formatDate(dateString) {
+  if (!dateString) return "Unknown";
+
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "Unknown";
+
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 export default function BookDetailPage() {
   const params = useParams();
   const router = useNavigate();
@@ -59,7 +72,9 @@ export default function BookDetailPage() {
               : "/placeholder.svg?height=400&width=300",
           },
           description: book.description?.value || book.description || "No description available.",
-          publishedDate: book.first_publish_date || "Unknown",
+
+
+          publishedDate: book.last_modified?.value || "Unknown",
           categories: book.subjects?.slice(0, 3) || [],
         },
       };
@@ -117,7 +132,10 @@ export default function BookDetailPage() {
   const image = book.covers?.[0]
     ? getBookCoverUrl(book.covers[0])
     : "/placeholder.svg?height=400&width=300";
-  const publishedDate = book.first_publish_date || "Unknown";
+  const rawDate = book.last_modified?.value;
+  const publishedDate = formatDate(rawDate);
+
+  // const publishedDate = book.last_modified?.value || "Unknown";
   const subjects = book.subjects?.slice(0, 5) || [];
 
   return (
