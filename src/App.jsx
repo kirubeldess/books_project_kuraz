@@ -3,28 +3,29 @@ import './App.css'
 import { Button } from "./components/ui/button"
 import Signup from './pages/Register'
 import { UserAuth } from './services/AuthContext';
+import HomePage from './pages/Home';
 
 function App() {
-  const {session, signOut, signInUser} = UserAuth();
+  const { session, signOut, signInUser } = UserAuth();
   const navigate = useNavigate();
 
   console.log(session);
 
   const handleSignOut = async (e) => {
     e.preventDefault();
-    try{
+    try {
       await signOut();
       navigate('/signin');
-    }catch(error){
+    } catch (error) {
       console.error('error signing out', error);
     }
   }
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    try{
+    try {
       navigate('/signin');
-    }catch(error){
+    } catch (error) {
       console.error('error navigating to sign in', error);
     }
   }
@@ -32,12 +33,8 @@ function App() {
   return (
     <>
 
-      <div >Homepage</div>
-      <h3>Welcome {session?.user?.email}</h3>
-      <Button onClick={session ? handleSignOut : handleSignIn}>
-        {session ? 'Sign Out' : 'Sign In'}
-      </Button>
-      
+      <HomePage />
+
 
     </>
   )
