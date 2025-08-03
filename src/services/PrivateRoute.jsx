@@ -6,13 +6,13 @@ import { useNavigate } from "react-router-dom"
 
 export function PrivateRoute({ children }) {
   const { session, loading } = useAuth()
-  const router = useNavigate()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!loading && !session) {
-      router.push("/login")
+      navigate("/login")
     }
-  }, [session, loading, router])
+  }, [session, loading, navigate])
 
   if (loading) {
     return (
