@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react"
-import { Search, ArrowRight } from "lucide-react"
+import { Search, ArrowRight, BookOpen, Microscope, History, User, Heart, Search as SearchIcon } from "lucide-react"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Card, CardContent } from "../components/ui/card"
@@ -13,12 +12,12 @@ import { Link, useNavigate } from "react-router-dom"
 import book from "../assets/book.png"
 
 const categories = [
-    { name: "Fiction", icon: "📚", query: "fiction" },
-    { name: "Science", icon: "🔬", query: "science" },
-    { name: "History", icon: "📜", query: "history" },
-    { name: "Biography", icon: "👤", query: "biography" },
-    { name: "Romance", icon: "💕", query: "romance" },
-    { name: "Mystery", icon: "🔍", query: "mystery" },
+    { name: "Fiction", icon: BookOpen, query: "fiction" },
+    { name: "Science", icon: Microscope, query: "science" },
+    { name: "History", icon: History, query: "history" },
+    { name: "Biography", icon: User, query: "biography" },
+    { name: "Romance", icon: Heart, query: "romance" },
+    { name: "Mystery", icon: SearchIcon, query: "mystery" },
 ]
 
 export default function HomePage() {
@@ -100,11 +99,11 @@ export default function HomePage() {
                     style={{ backgroundImage: `url(${book})` }}
                 ></div>
 
-                <div className="container mx-auto px-4 relative z-10">
+                <div className="container mx-auto px-4 mt-6 relative z-10">
                     <div className="justify-center lg:text-start lg:flex lg:justify-between gap-12 items-center py-12">
                         <div className="space-y-8 w-full lg:w-1/2">
-                            <div className="space-y-4">
-                                <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
+                            <div className="space-y-4 ">
+                                <h1 className="text-4xl lg:text-5xl font-bold leading-tight font-exo-two">
                                     The more that you read, the more things you'll know.
                                 </h1>
                                 <p className="text-xl text-gray-700 leading-relaxed">
@@ -131,21 +130,21 @@ export default function HomePage() {
                         </div>
 
                         <div className="hidden lg:flex">
-                            <img src={book} alt="Person reading" className="rounded-2xl" />
+                            <img src={book} alt="books" className="rounded-2xl" />
                         </div>
                     </div>
 
-                    <div className="flex gap-8 w-full relative z-10">
+                    <div className="flex gap-8 -mt-8 w-full relative z-10 font-exo-two">
                         <div>
-                            <div className="text-2xl font-bold">10M+</div>
+                            <div className="text-2xl font-bold">10m+</div>
                             <div className="text-gray-400">Books</div>
                         </div>
                         <div>
-                            <div className="text-2xl font-bold">500K+</div>
+                            <div className="text-2xl font-bold">500k+</div>
                             <div className="text-gray-400">Readers</div>
                         </div>
                         <div>
-                            <div className="text-2xl font-bold">50K+</div>
+                            <div className="text-2xl font-bold">50k+</div>
                             <div className="text-gray-400">Authors</div>
                         </div>
                     </div>
@@ -153,35 +152,40 @@ export default function HomePage() {
             </section>
 
 
-            <section className="py-20 bg-gray-50">
+            <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-4">Explore Categories</h2>
-                        <p className="text-gray-600 max-w-2xl mx-auto">
-                            Discover books across different genres and find your next favorite read
+                    <div className="text-center mb-16">
+                        
+                        <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 font-exo-two">
+                            Explore Categories
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                            Discover books across different genres and find your next favorite read from our curated collection
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                         {categoriesLoading
                             ? [...Array(6)].map((_, i) => (
-                                <Card key={i} className="animate-pulse bg-green-100 border-gray-200">
+                                <Card key={i} className="animate-pulse bg-white border-0 rounded-2xl shadow-lg overflow-hidden">
                                     <CardContent className="p-6 text-center">
-                                        <div className="w-8 h-8 bg-gray-200 rounded mx-auto mb-3"></div>
-                                        <div className="h-4 bg-gray-200 rounded mb-1"></div>
-                                        <div className="h-3 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                                        <div className="w-12 h-12 bg-gray-200 rounded-xl mx-auto mb-4"></div>
+                                        <div className="h-5 bg-gray-200 rounded mb-2"></div>
+                                        <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
                                     </CardContent>
                                 </Card>
                             ))
                             : categoriesData.map((category, index) => (
                                 <Link key={index} to={`/search?q=${encodeURIComponent(category.query)}`}>
-                                    <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer bg-green-50">
-                                        <CardContent className=" text-center">
-                                            <div className="text-3xl mb-3">{category.icon}</div>
-                                            <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-orange-500 transition-colors">
+                                    <Card className="group hover:shadow-2xl transition-all duration-300 cursor-pointer bg-white border-0 rounded-2xl overflow-hidden hover:scale-105">
+                                        <CardContent className="p-6 text-center">
+                                            <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                                                <category.icon className="w-6 h-6 text-white" />
+                                            </div>
+                                            <h3 className="font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
                                                 {category.name}
                                             </h3>
-                                            <p className="text-sm text-gray-500">{category.count}+ books</p>
+                                            <p className="text-sm text-gray-500 font-medium">{category.count.toLocaleString()}+ books</p>
                                         </CardContent>
                                     </Card>
                                 </Link>
@@ -190,14 +194,19 @@ export default function HomePage() {
                 </div>
             </section>
 
-            <section className="py-20">
+            <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
                 <div className="container mx-auto px-4">
-                    <div className="flex items-center justify-between mb-12">
-                        <div>
-                            <h2 className="text-3xl font-bold text-gray-900 mb-2">What Will You Discover?</h2>
-                            <p className="text-gray-600">Popular books that readers love</p>
+                    <div className="flex items-center justify-between mb-16">
+                        <div className="max-w-2xl">
+                            
+                            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 font-exo-two">
+                                What Will You Discover?
+                            </h2>
+                            <p className="text-xl text-gray-600 leading-relaxed">
+                                Popular books that readers love, carefully selected for your reading journey
+                            </p>
                         </div>
-                        <Button variant="outline" asChild className="hidden md:flex bg-transparent">
+                        <Button variant="outline" asChild className="hidden lg:flex bg-white hover:bg-gray-50 border-gray-200 rounded-xl px-6 py-3">
                             <Link to="/search?q=bestseller">
                                 View All <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
@@ -205,38 +214,38 @@ export default function HomePage() {
                     </div>
 
                     {loading ? (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-8">
                             {[...Array(8)].map((_, i) => (
                                 <div key={i} className="animate-pulse">
-                                    <div className="aspect-[3/4] bg-gray-200 rounded-lg mb-4"></div>
-                                    <div className="space-y-2">
-                                        <div className="h-4 bg-gray-200 rounded"></div>
-                                        <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                                    <div className="aspect-[3/4] bg-gray-200 rounded-2xl mb-4"></div>
+                                    <div className="space-y-3">
+                                        <div className="h-5 bg-gray-200 rounded"></div>
+                                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     ) : featuredBooks.length > 0 ? (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-8">
                             {featuredBooks.map((book) => (
                                 <BookCard key={book.id} book={book} />
                             ))}
                         </div>
                     ) : (
-                        <Card className="max-w-md mx-auto text-center">
-                            <CardContent className="pt-12 pb-12">
-                                <div className="text-gray-400 mb-4">📚</div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Unable to load featured books</h3>
-                                <p className="text-gray-600 mb-4">Please try again later or search for books directly</p>
-                                <Button asChild variant="outline">
+                        <Card className="max-w-md mx-auto text-center bg-white border-0 rounded-2xl shadow-lg">
+                            <CardContent className="pt-16 pb-16">
+                                <div className="text-6xl mb-6">📚</div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3">Unable to load featured books</h3>
+                                <p className="text-gray-600 mb-6">Please try again later or search for books directly</p>
+                                <Button asChild className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 rounded-xl">
                                     <Link to="/search">Browse Books</Link>
                                 </Button>
                             </CardContent>
                         </Card>
                     )}
 
-                    <div className="text-center mt-12 md:hidden">
-                        <Button variant="outline" asChild>
+                    <div className="text-center mt-12 lg:hidden">
+                        <Button variant="outline" asChild className="bg-white hover:bg-gray-50 border-gray-200 rounded-xl px-6 py-3">
                             <Link to="/search?q=bestseller">
                                 View All Books <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
